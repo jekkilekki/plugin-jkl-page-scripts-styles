@@ -67,6 +67,18 @@ if ( ! class_exists( 'JKL_Page_ScriptsStyles' ) ) {
             
         }
         
+        public static function activate() {
+            
+        } // END activate
+        
+        public static function deactivate() {
+            
+        } // END deactivate
+        
+        public function get_version() {
+            return $this->version;
+        }
+        
     } // END class JKL_Page_ScriptsStyles
     
 } // END if ( ! class_exists() )
@@ -77,7 +89,7 @@ if ( ! class_exists( 'JKL_Page_ScriptsStyles' ) ) {
 if ( class_exists( 'JKL_Page_ScriptsStyles' ) ) {
     
     // Installation and uninstallation hooks
-    register_acitivation_hook( __FILE__, array( 'JKL_Page_ScriptsStyles', 'activate' ) );
+    register_activation_hook( __FILE__, array( 'JKL_Page_ScriptsStyles', 'activate' ) );
     register_deactivation_hook( __FILE__, array( 'JKL_Page_ScriptsStyles', 'deactivate' ) );
     
     // Instantiate the plugin class
