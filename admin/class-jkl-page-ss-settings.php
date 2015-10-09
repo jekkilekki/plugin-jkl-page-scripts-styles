@@ -1,13 +1,18 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit;
-if ( ! class_exists( 'JKL_Page_SS_Settings' ) ) {
+    
 /**
  * JKL Page Scripts & Styles Settings
- * Doc: https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
  * 
- * @package JKL-Page-ScriptsStyles
- * @author Aaron Snowberger
+ * Allow the user to decide whether to use the metabox on Posts, Pages, or both 
+ * and whether or not to use Custom CSS or Custom JS or both
+ * 
+ * @package     JKL_Page_Styles_Scripts
+ * @subpackage  JKL_Page_Styles_Scripts/admin
+ * @author      Aaron Snowberger <jekkilekki@gmail.com>
  */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! class_exists( 'JKL_Page_SS_Settings' ) ) {
     
 class JKL_Page_SS_Settings {
     
@@ -49,7 +54,7 @@ class JKL_Page_SS_Settings {
         register_setting(
                 'main-settings-page',
                 'main-settings',
-                array( $this, 'sanitize' )
+                array( $this, 'validate' )
         );
         
         /**
@@ -81,8 +86,8 @@ class JKL_Page_SS_Settings {
         /**
          * Register our settings
          */
-        register_setting( 'main-settings-page', 'post_type', array( $this, 'sanitize' ) );
-        register_setting( 'main-settings-page', 'custom_boxes', array( $this, 'sanitize' ) );
+        //register_setting( 'main-settings-page', 'post_type', array( $this, 'sanitize' ) );
+        //register_setting( 'main-settings-page', 'custom_boxes', array( $this, 'sanitize' ) );
         
     } // END jkl_register_pagess_settings()
     
@@ -91,18 +96,6 @@ class JKL_Page_SS_Settings {
      * Create Admin Menu
      */
     public function jkl_add_menus() {
-        
-        /**
-         * Create a submenu for THIS plugin
-         */
-        add_submenu_page( 
-                'jkl-plugins-main-menu',
-                __( 'JKL Page Scripts and Styles Settings', 'jkl-page-scripts-styles' ),
-                __( 'JKL Page Scripts', 'jkl-page-scripts-styles' ),
-                'manage_options',
-                'jkl_pagess_settings',
-                array( $this, 'jkl_create_settings_page' )
-        );
         
         /**
          * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -121,6 +114,18 @@ class JKL_Page_SS_Settings {
             );
        }
         
+        /**
+         * Create a submenu for THIS plugin
+         */
+        add_submenu_page( 
+                'jkl-plugins-main-menu',
+                __( 'JKL Page Scripts and Styles Settings', 'jkl-page-scripts-styles' ),
+                __( 'JKL Page Scripts', 'jkl-page-scripts-styles' ),
+                'manage_options',
+                'jkl_pagess_settings',
+                array( $this, 'jkl_create_settings_page' )
+        );
+        
     } // END jkl_add_menus() 
     
     /**
@@ -129,6 +134,7 @@ class JKL_Page_SS_Settings {
      */
     public function jkl_create_settings_page() {
     ?>
+        <h2>JKL Page Scripts & Styles Settings</h2>
         <div class="wrap">
             <form method="post" action="options.php">
         
@@ -141,32 +147,35 @@ class JKL_Page_SS_Settings {
         
             </form>
         </div>    
-        
+    <?php    
     } // END jlk_create_settings_page()
     
     /**
      * CALLBACK:
-     * Sanitize each setting field as needed
+     * Validate each setting field as needed
      * 
      * @param array $input Contains all settings fields as array keys
      */
-    public function sanitize( $input ) {
+    public function validate( $input ) {
         
-        $new_input = array();
+        // Create output array for storing the validated options
+        $output = array();
         
-        if( isset( $input[ 'title' ] ) )
-            $new_input[ 'title' ] = sanitize_text_field( $input[ 'title' ] );
+        // Loop through each of the incoming options --> not yet
+        foreach( $input as $key => $value ) {
+            
+            // Check to see if there is a value, if so - process it.
+            if( isset( $input[ $key] ) ) {
+                
+                // Strip all HTML and PHP tags and properly handle quoted strings
+                $output[ $key ] = strip_tags( stripslashes( $input[ $key ] ) );
+                
+            } // end if
+            
+        } // end foreach
         
-        if( isset( $input[ 'author' ] ) )
-            $new_input[ 'author' ] = sanitize_text_field( $input[ 'author' ] );
-        
-        if( isset( $input[ 'series' ] ) )
-            $new_input[ 'series' ] = sanitize_text_field( $input[ 'series' ] );
-        
-        if( isset( $input[ 'category' ] ) )
-            $new_input[ 'category' ] = sanitize_text_field( $input[ 'category' ] );
-        
-        return $new_input;
+        // Return the array processing any additional functions filtered by this action
+        return apply_filters( 'validate', $output, $input );
         
     }
     
@@ -194,16 +203,12 @@ class JKL_Page_SS_Settings {
         if ( ! isset( $this->options[ 'use_on_page' ] ) ) $this->options[ 'use_on_page' ] = 0;
         if ( ! isset( $this->options[ 'use_on_post' ] ) ) $this->options[ 'use_on_post' ] = 1;
         ?>
-        
-        <td>
+       
             <input type="checkbox" id="use_on_page" name="use_on_page" value="1" <?php checked( $this->options[ 'use_on_page' ], 1 ); ?> />
-            <label for="use_on_page" class="note"><?php _e( 'Use on Page?', 'jkl-page-scripts-styles' ); ?></label>
-        </td>
-        
-        <td>
+            <label for="use_on_page" class="note"><?php _e( 'Use on Pages?', 'jkl-page-scripts-styles' ); ?></label>
+            <br>
             <input type="checkbox" id="use_on_post" name="use_on_post" value="1" <?php checked( $this->options[ 'use_on_post' ], 1 ); ?> />
             <label for="use_on_post" class="note"><?php _e( 'Use on Posts?', 'jkl-page-scripts-styles' ); ?></label>
-        </td>
         
     <?php
     } // END choose_post_type()
@@ -212,21 +217,17 @@ class JKL_Page_SS_Settings {
      * CALLBACK:
      * Print Custom CSS and Custom JS selection boxes
      */
-    public function custom_boxes() {
+    public function enable_boxes() {
         
         if ( ! isset( $this->options[ 'use_custom_css' ] ) ) $this->options[ 'use_custom_css' ] = 1;
         if ( ! isset( $this->options[ 'use_custom_js' ] ) ) $this->options[ 'use_custom_js' ] = 1;
         ?>
         
-        <td>
             <input type="checkbox" id="use_custom_css" name="use_custom_css" value="1" <?php checked( $this->options[ 'use_custom_css' ], 1 ); ?> />
             <label for="use_custom_css" class="note"><?php _e( 'Enable Custom CSS Metabox', 'jkl-page-scripts-styles' ); ?></label>
-        </td>
-        
-        <td>
+            <br>
             <input type="checkbox" id="use_custom_js" name=use_custom_js" value="1" <?php checked( $this->options[ 'use_custom_js' ], 1 ); ?> />
             <label for="use_custom_js" class="note"><?php _e( 'Enable Custom JS Metabox', 'jkl-page-scripts-styles' ); ?></label>
-        </td>
         
     <?php    
     } // END custom_css()
