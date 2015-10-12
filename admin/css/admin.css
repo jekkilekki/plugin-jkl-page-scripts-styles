@@ -21,3 +21,8 @@ a.nav-tab-active {
     width: 100%;
     height: 250px;
 }
+
+#jkl-page-ss-enqueue input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+}

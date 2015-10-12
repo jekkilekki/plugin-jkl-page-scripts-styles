@@ -41,6 +41,15 @@ if ( ! class_exists( 'JKL_Page_SS' ) ) {
          */
         private $meta_box;
         
+        /**
+         * A reference to the meta box.
+         * 
+         * @since   0.1.0
+         * @access  private
+         * @var     JKL_Page_SS_Settings    $settings_page   A reference to the admin settings page for the plugin.
+         */
+        private $settings_page;
+        
         
         /**
          * CONSTRUCTOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -57,6 +66,7 @@ if ( ! class_exists( 'JKL_Page_SS' ) ) {
             $this->version = $version;
             
             $this->meta_box = new JKL_Page_SS_Meta_Box();
+            $this->settings_page = new JKL_Page_SS_Settings();
             
             add_action( 'admin_enqueue_scripts', array( $this, 'jkl_enqueue_admin_styles' ) );
             add_action( 'admin_enqueue_scripts', array( $this, 'jkl_enqueue_admin_scripts' ) );
@@ -113,6 +123,13 @@ if ( ! class_exists( 'JKL_Page_SS' ) ) {
                 wp_enqueue_script(
                         $this->name . '-tabs',
                         plugins_url( 'jkl-page-scripts-styles/admin/js/tabs.js' ),
+                        array( 'jquery' ),
+                        $this->version
+                );
+                
+                wp_enqueue_script(
+                        $this->name . '-enqueue-files',
+                        plugins_url( 'jkl-page-scripts-styles/admin/js/enqueue-files.js' ),
                         array( 'jquery' ),
                         $this->version
                 );

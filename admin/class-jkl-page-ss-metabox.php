@@ -18,7 +18,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
-if ( ! class_exists( JKL_Page_SS_Meta_Box ) ) {
+//if ( ! class_exists( JKL_Page_SS_Meta_Box ) ) {
     
 class JKL_Page_SS_Meta_Box {
     
@@ -30,7 +30,7 @@ class JKL_Page_SS_Meta_Box {
     public function __construct() {
         
         add_action( 'add_meta_boxes', array( $this, 'jkl_add_meta_box' ) );
-        add_action( 'savePpost', array( $this, 'jkl_save_post' ) );
+        add_action( 'save_post', array( $this, 'jkl_save_post' ) );
         
     } // END __construct()
     
@@ -114,4 +114,4 @@ class JKL_Page_SS_Meta_Box {
     }
     
 } // END JKL_Page_SS_Meta_Box
-} // END if ( ! class_exists() )
+//} // END if ( ! class_exists() )

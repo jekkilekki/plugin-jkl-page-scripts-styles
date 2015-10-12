@@ -42,6 +42,11 @@
 if ( ! defined( 'WPINC' ) ) die;
 
 /**
+ * The class that represents the admin settings page
+ */
+require_once plugin_dir_path( __FILE__ ) . 'admin/class-jkl-page-ss-settings.php';
+
+/**
  * The class that represents the meta box that will display the fields for the meta box
  */
 require_once plugin_dir_path( __FILE__ ) . 'admin/class-jkl-page-ss-metabox.php';
