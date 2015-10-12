@@ -42,7 +42,7 @@ if ( ! class_exists( 'JKL_Page_SS' ) ) {
         private $meta_box;
         
         /**
-         * A reference to the meta box.
+         * A reference to the Settings page.
          * 
          * @since   0.1.0
          * @access  private
@@ -136,7 +136,7 @@ if ( ! class_exists( 'JKL_Page_SS' ) ) {
                 
             }
             
-        } // END jkl-enqueue_admin_scripts()
+        } // END jkl_enqueue_admin_scripts()
         
     } // END class JKL_Page_ScriptsStyles
     

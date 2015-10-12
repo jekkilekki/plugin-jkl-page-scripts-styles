@@ -35,7 +35,7 @@ class JKL_Page_SS_Meta_Box {
     } // END __construct()
     
     /**
-     * The function responsible for creating the actual meta box
+     * This function is responsible for creating the actual meta box
      * 
      * @since 0.1.0
      */
